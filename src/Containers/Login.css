@@ -1,0 +1,46 @@
+.dv input[type="text"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.dv input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.buttn {
+  background: rgb(184, 62, 108);
+  background: linear-gradient(
+    90deg,
+    rgba(184, 62, 108, 1) 20%,
+    rgba(255, 186, 0, 0.8113620448179272) 96%
+  );
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.buttn:hover {
+  opacity: 0.8;
+}
+h1 {
+  display: flex;
+  justify-content: center;
+}
+.dv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 700px;
+}
