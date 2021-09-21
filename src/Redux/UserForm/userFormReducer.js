@@ -15,7 +15,6 @@ export const userFormReducer = (
       };
     case Sorting:
       if (currentsort === true) {
-        console.log("also here");
         return {
           ...state,
           data: state.data.sort((a, b) => b.Age - a.Age),

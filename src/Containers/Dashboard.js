@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./dashboard.css";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
 import View from "../Containers/Assets/view.png";
 import Delete from "../Containers/Assets/delete.png";
@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [table, showTable] = useState(true);
   const [currentsort, setCurrentSort] = useState(true);
   const [config, setConfig] = useState(true);
+  const formikRef = useRef();
+  const [imag, setImag] = useState();
   // User Information
   const info = useSelector((state) => {
     return state?.detail?.data;
@@ -31,7 +33,7 @@ const Dashboard = () => {
   const searched = useSelector((state) => {
     return state?.detail?.search;
   });
-  
+
   useEffect(() => {
     setCheck(searched);
   }, [searched, display]);
@@ -40,7 +42,7 @@ const Dashboard = () => {
     showTable(false);
     dispatch(searchAction(find));
   };
-  
+
   const onSortChange = () => {
     dispatch(sortingAction(currentsort));
     setCurrentSort(!currentsort);
@@ -121,6 +123,7 @@ const Dashboard = () => {
         <div className="cont">
           <h1>Add User</h1>
           <Formik
+            innerRef={formikRef}
             initialValues={{
               Id: new Date().getUTCMilliseconds(),
               FirstName: "",
@@ -146,19 +149,18 @@ const Dashboard = () => {
                 )
                 .required("Last name is required"),
               Age: Yup.string().required("Age required"),
-              file: Yup.mixed().required("We need a Photo"),
+              Photo1: Yup.mixed().required(),
             })}
             onSubmit={(values, { setSubmitting, resetForm }) => {
               values.Id = new Date().getUTCMilliseconds();
-
               const { Id, FirstName, LastName, Age, Email, Photo1 } = values;
 
               var formData = new FormData();
-              formData.set("Id", Id);
-              formData.set("FirstName", FirstName);
-              formData.set("LastName", LastName);
-              formData.set("Age", Age);
-              formData.set("Email", Email);
+              formData.append("Id", Id);
+              formData.append("FirstName", FirstName);
+              formData.append("LastName", LastName);
+              formData.append("Age", Age);
+              formData.append("Email", Email);
               formData.append("Photo1", Photo1);
               const formEntry = formData.entries();
               const lol = Object.assign(
@@ -172,6 +174,7 @@ const Dashboard = () => {
               setSubmitting(false);
               resetForm({});
               closeModal();
+              setImag("");
             }}
           >
             {(formProps) => (
@@ -189,21 +192,22 @@ const Dashboard = () => {
                   <ErrorMessage name="Age" />
                   <Field name="Email" placeholder="Email" type="text" />
                   <ErrorMessage name="Email" />
-                  <div>
-                    <Field
-                      name="file"
-                      type="file"
-                      onChange={(e) => {
-                        formProps.setFieldValue(
-                          "Photo1",
-                          (window.URL || window.webkitURL).createObjectURL(
-                            e.target.files[0]
-                          )
-                        );
-                      }}
-                    />
-                    <ErrorMessage name="file" />
-                  </div>
+                </div>
+                <div>
+                  <Field
+                    name="file"
+                    type="file"
+                    onChange={(e) => {
+                      setImag(e.target.files[0].name);
+                      formProps.setFieldValue(
+                        "Photo1",
+                        (window.URL || window.webkitURL).createObjectURL(
+                          e.target.files[0]
+                        )
+                      );
+                    }}
+                  />
+                  <p>{imag ? imag : "No File Choosen"}</p>
                 </div>
 
                 <div>

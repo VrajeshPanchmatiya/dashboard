@@ -1,11 +1,4 @@
-import {
-  Data,
-  Delete,
-  Searching,
-  Sorting,
-  SortingCharacter,
-  View,
-} from "./type";
+import { Data, Delete, Searching, Sorting, SortingCharacter } from "./type";
 // UserForm Action
 export const userFormAction = (form) => {
   return (dispatch) => {
@@ -15,7 +8,6 @@ export const userFormAction = (form) => {
 
 // Sorting Age Action
 export const sortingAction = (currentsort) => {
-  console.log(currentsort);
   return (dispatch) => {
     dispatch({ type: Sorting, currentsort: currentsort });
   };
@@ -41,4 +33,3 @@ export const deleteAction = (id) => {
     dispatch({ type: Delete, payload: id });
   };
 };
-

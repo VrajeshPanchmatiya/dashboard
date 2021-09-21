@@ -117,6 +117,10 @@ li a:hover {
     border: 1px solid #ccc;
   }
 }
+input[type="file"] {
+  color: transparent;
+  width: 10%;
+}
 table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -146,10 +150,11 @@ tr:nth-child(even) {
 /* Columns */
 .left-column {
   width: 65%;
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  border: 1px solid #dddddd;
+  position: relative;
+}
 
+.right-column {
+  width: 35%;
   margin-top: 60px;
   margin-left: 10px;
 }
