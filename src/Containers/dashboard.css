@@ -20,34 +20,20 @@ input[type="reset"] {
   box-sizing: border-box;
   text-transform: initial;
 }
-.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
 
-.btn {
-  border: 2px solid gray;
-  color: gray;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.upload-btn-wrapper input[type="file"] {
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-}
 .content {
   margin: 10%;
   width: 50%;
 }
+.main-contain {
+  width: 100%;
+  position: static;
+}
 
 .topnav {
-  overflow: hidden;
   background-color: #e9e9e9;
+  width: 100%;
+  position: fixed;
 }
 .topnav .search-container {
   float: right;
@@ -57,12 +43,11 @@ input[type="reset"] {
   margin-top: 8px;
   font-size: 17px;
   border: none;
-  margin-bottom: 8px;
 }
 
 .topnav .search-container button {
   float: right;
-  padding: 6px;
+  padding: 6px 10px;
   margin-top: 8px;
   margin-right: 16px;
   background: #ddd;
@@ -75,34 +60,39 @@ input[type="reset"] {
   background: #ccc;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  width: 200px;
+.aside {
+  position: absolute;
+  height: 95%;
+  left: 0em;
   background-color: #f1f1f1;
-  height: 100%;
-  position: fixed;
-}
-
-li a {
-  display: block;
-  color: #000;
-  padding: 8px 16px;
   text-decoration: none;
 }
 
-/* Change the link color on hover */
-li a:hover {
-  background-color: #555;
-  color: white;
+.aside ul li {
+  display: block;
+  padding: 8px 16px;
+  height: 100%;
 }
 
-.container {
-  margin-left: 12%;
+.aside li a {
+  height: 100%;
+  padding: 8px 16px;
+  color: #000;
+  text-decoration: none;
 }
-@media screen and (max-width: 600px) {
+.aside li p {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.container {
+  margin-left: 170px;
+  position: absolute;
+  top: 40px;
+}
+@media screen and (max-width: 650px) {
   .topnav .search-container {
     float: none;
+    overflow: hidden;
   }
   .topnav input[type="text"],
   .topnav .search-container button {
@@ -116,10 +106,16 @@ li a:hover {
   .topnav input[type="text"] {
     border: 1px solid #ccc;
   }
+  .container {
+    top: 100px;
+  }
+  .aside {
+    top: 100px;
+  }
 }
 input[type="file"] {
   color: transparent;
-  width: 10%;
+  margin-left: 20%;
 }
 table {
   font-family: Arial, Helvetica, sans-serif;

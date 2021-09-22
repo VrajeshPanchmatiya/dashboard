@@ -1,0 +1,14 @@
+.comm {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+.bn {
+  width: 30%;
+  font-size: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -82,38 +82,165 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="topnav">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search.."
-            onChange={searchinput}
-            name="search"
-          />
-          <button type="submit" onClick={search}>
-            Submit
-          </button>
+      <div className="main-contain">
+        <div className="topnav">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search.."
+              onChange={searchinput}
+              name="search"
+            />
+            <button type="submit" onClick={search}>
+              Submit
+            </button>
+          </div>
+        </div>
+        <div className="aside">
+          <ul>
+            <li>
+              <Link to="/Home">Home</Link>
+            </li>
+            <li>
+              <p onClick={openModal}>Add User</p>
+            </li>
+            <li>
+              <Link to="/About">About</Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="container">
+          <table>
+            <tbody>
+              <tr>
+                <th>Id</th>
+                <th colSpan="2" onClick={() => requestSort("FirstName")}>
+                  FirstName
+                </th>
+                <th colSpan="2" onClick={() => requestSort("LastName")}>
+                  LastName
+                </th>
+                <th colSpan="1" onClick={() => onSortChange()}>
+                  Age
+                </th>
+                <th colSpan="2">Email</th>
+                <th colSpan="2">Photo</th>
+                <th>View</th>
+                <th>Delete</th>
+              </tr>
+              {table === true ? (
+                info?.map(({ Id, FirstName, LastName, Age, Email, Photo1 }) => {
+                  return (
+                    <tr key={Id}>
+                      <td>{Id}</td>
+                      <td colSpan={2}>{FirstName}</td>
+                      <td colSpan={2}>{LastName}</td>
+                      <td>{Age}</td>
+                      <td colSpan={2}>{Email}</td>
+                      <td colSpan={2}>
+                        <img src={Photo1} height="50px" width="50px" />
+                      </td>
+                      <td>
+                        <img
+                          src={View}
+                          height="25px"
+                          width="25px"
+                          onClick={() =>
+                            handleView({
+                              Id,
+                              FirstName,
+                              LastName,
+                              Age,
+                              Email,
+                              Photo1,
+                            })
+                          }
+                        />
+                      </td>
+                      <td>
+                        <img
+                          src={Delete}
+                          height="25px"
+                          width="25px"
+                          onClick={() => handleDelete(Id)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : check.length > 0 ? (
+                check.map(({ Id, FirstName, LastName, Age, Email, Photo1 }) => {
+                  return (
+                    <tr key={Id}>
+                      <td>{Id}</td>
+                      <td colSpan={2}>{FirstName}</td>
+                      <td colSpan={2}>{LastName}</td>
+                      <td>{Age}</td>
+                      <td colSpan={2}>{Email}</td>
+                      <td colSpan={2}>
+                        <img src={Photo1} height="50px" width="50px" />
+                      </td>
+                      <td>
+                        <img
+                          src={View}
+                          height="25px"
+                          width="25px"
+                          onClick={handleView}
+                        />
+                      </td>
+                      <td>
+                        <img
+                          src={Delete}
+                          height="25px"
+                          width="25px"
+                          onClick={handleDelete}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <h3>No Records Found</h3>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
-      <div>
-        <ul>
-          <li>
-            <Link to="/Home">Home</Link>
-          </li>
-          <li>
-            <button
-              type="submit"
-              style={{ border: "none" }}
-              onClick={openModal}
-            >
-              Add User
-            </button>
-          </li>
-          <li>
-            <Link to="/About">About</Link>
-          </li>
-        </ul>
-      </div>
+      <Modal
+        isOpen={viewModal}
+        onRequestClose={hideModal}
+        className="content"
+        ariaHideApp={false}
+      >
+        <>
+          <div className="containr">
+            <div className="left-column">
+              <img src={display.Photo1} alt="ok" />
+            </div>
+
+            {/* <!-- Right Column --> */}
+            <div className="right-column">
+              {/* <!-- Product Description --> */}
+              <div className="product-description">
+                <span>Id: {display.Id}</span>
+                <h2>
+                  {display.FirstName} {display.LastName}
+                </h2>
+                <h3>AGE: {display.Age}</h3>
+                <h5>Email: {display.Email}</h5>
+                <p>
+                  A human is a member of the species Homo sapiens, which means
+                  'wise man' in Latin. Carolus Linnaeus put humans in the
+                  mammalian order of primates. ... Humans have a very complex
+                  brain, which is much larger than that of the other living
+                  apes. They use language, make ideas, and feel emotions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      </Modal>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -208,6 +335,7 @@ const Dashboard = () => {
                     }}
                   />
                   <p>{imag ? imag : "No File Choosen"}</p>
+                  <ErrorMessage name="Photo1" />
                 </div>
 
                 <div>
@@ -217,136 +345,6 @@ const Dashboard = () => {
             )}
           </Formik>
         </div>
-      </Modal>
-      <div className="container">
-        <table>
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <th colSpan="2" onClick={() => requestSort("FirstName")}>
-                FirstName
-              </th>
-              <th colSpan="2" onClick={() => requestSort("LastName")}>
-                LastName
-              </th>
-              <th colSpan="1" onClick={() => onSortChange()}>
-                Age
-              </th>
-              <th colSpan="2">Email</th>
-              <th colSpan="2">Photo</th>
-              <th>View</th>
-              <th>Delete</th>
-            </tr>
-            {table === true ? (
-              info?.map(({ Id, FirstName, LastName, Age, Email, Photo1 }) => {
-                return (
-                  <tr key={Id}>
-                    <td>{Id}</td>
-                    <td colSpan={2}>{FirstName}</td>
-                    <td colSpan={2}>{LastName}</td>
-                    <td>{Age}</td>
-                    <td colSpan={2}>{Email}</td>
-                    <td colSpan={2}>
-                      <img src={Photo1} height="50px" width="50px" />
-                    </td>
-                    <td>
-                      <img
-                        src={View}
-                        height="25px"
-                        width="25px"
-                        onClick={() =>
-                          handleView({
-                            Id,
-                            FirstName,
-                            LastName,
-                            Age,
-                            Email,
-                            Photo1,
-                          })
-                        }
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src={Delete}
-                        height="25px"
-                        width="25px"
-                        onClick={() => handleDelete(Id)}
-                      />
-                    </td>
-                  </tr>
-                );
-              })
-            ) : check.length > 0 ? (
-              check.map(({ Id, FirstName, LastName, Age, Email, Photo1 }) => {
-                return (
-                  <tr key={Id}>
-                    <td>{Id}</td>
-                    <td colSpan={2}>{FirstName}</td>
-                    <td colSpan={2}>{LastName}</td>
-                    <td>{Age}</td>
-                    <td colSpan={2}>{Email}</td>
-                    <td colSpan={2}>
-                      <img src={Photo1} height="50px" width="50px" />
-                    </td>
-                    <td>
-                      <img
-                        src={View}
-                        height="25px"
-                        width="25px"
-                        onClick={handleView}
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src={Delete}
-                        height="25px"
-                        width="25px"
-                        onClick={handleDelete}
-                      />
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <h6>No Records Found</h6>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Modal
-        isOpen={viewModal}
-        onRequestClose={hideModal}
-        className="content"
-        ariaHideApp={false}
-      >
-        <>
-          <div className="containr">
-            <div className="left-column">
-              <img src={display.Photo1} alt="ok" />
-            </div>
-
-            {/* <!-- Right Column --> */}
-            <div className="right-column">
-              {/* <!-- Product Description --> */}
-              <div className="product-description">
-                <span>Id: {display.Id}</span>
-                <h2>
-                  {display.FirstName} {display.LastName}
-                </h2>
-                <h3>AGE: {display.Age}</h3>
-                <h5>Email: {display.Email}</h5>
-                <p>
-                  A human is a member of the species Homo sapiens, which means
-                  'wise man' in Latin. Carolus Linnaeus put humans in the
-                  mammalian order of primates. ... Humans have a very complex
-                  brain, which is much larger than that of the other living
-                  apes. They use language, make ideas, and feel emotions.
-                </p>
-              </div>
-            </div>
-          </div>
-        </>
       </Modal>
     </>
   );
