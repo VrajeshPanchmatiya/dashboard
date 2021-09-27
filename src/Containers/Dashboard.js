@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./dashboard.css";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import View from "../Containers/Assets/view.png";
 import Delete from "../Containers/Assets/delete.png";
 import Modal from "react-modal";
+import Edit from "../Containers/Assets/editing.png";
 import {
   userFormAction,
   searchAction,
   sortingAction,
   sortingCharacterAction,
   deleteAction,
+  userEditFormAction,
 } from "../Redux/UserForm/userFormAction";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -25,6 +27,15 @@ const Dashboard = () => {
   const [config, setConfig] = useState(true);
   const formikRef = useRef();
   const [imag, setImag] = useState();
+  const [startingValues, setStartingValues] = useState({
+    Id: "",
+    FirstName: "",
+    LastName: "",
+    Age: "",
+    Email: "",
+    Photo1: "",
+  });
+  const [currentMode, setCurrentMode] = useState(true);
   // User Information
   const info = useSelector((state) => {
     return state?.detail?.data;
@@ -36,7 +47,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     setCheck(searched);
-  }, [searched, display]);
+  }, [searched, display, imag, check]);
+  console.log(info);
   // Search the Value
   const search = () => {
     showTable(false);
@@ -57,9 +69,9 @@ const Dashboard = () => {
   const openModal = () => {
     setIsOpen(true);
   };
-
   const closeModal = () => {
     setIsOpen(false);
+    setStartingValues("");
   };
   const handleView = (item) => {
     showDisplay(item);
@@ -80,6 +92,25 @@ const Dashboard = () => {
     showTable(true);
   };
 
+  const handleEdit = (detail) => {
+    console.log(detail);
+    setStartingValues({
+      Id: detail.Id,
+      FirstName: detail.FirstName,
+      LastName: detail.LastName,
+      Age: detail.Age,
+      Email: detail.Email,
+      Photo1: detail.Photo1,
+    });
+    setCurrentMode(false);
+    openModal();
+    // openEditModal();
+  };
+  const AddUser = () => {
+    setCurrentMode(true);
+    openModal();
+  };
+  // useEffect(() => {}, [startingValues]);
   return (
     <>
       <div className="main-contain">
@@ -102,7 +133,7 @@ const Dashboard = () => {
               <Link to="/Home">Home</Link>
             </li>
             <li>
-              <p onClick={openModal}>Add User</p>
+              <p onClick={AddUser}>Add User</p>
             </li>
             <li>
               <Link to="/About">About</Link>
@@ -127,6 +158,7 @@ const Dashboard = () => {
                 <th colSpan="2">Email</th>
                 <th colSpan="2">Photo</th>
                 <th>View</th>
+                <th>Edit</th>
                 <th>Delete</th>
               </tr>
               {table === true ? (
@@ -148,6 +180,23 @@ const Dashboard = () => {
                           width="25px"
                           onClick={() =>
                             handleView({
+                              Id,
+                              FirstName,
+                              LastName,
+                              Age,
+                              Email,
+                              Photo1,
+                            })
+                          }
+                        />
+                      </td>
+                      <td>
+                        <img
+                          src={Edit}
+                          height="25px"
+                          width="25px"
+                          onClick={() =>
+                            handleEdit({
                               Id,
                               FirstName,
                               LastName,
@@ -186,7 +235,33 @@ const Dashboard = () => {
                           src={View}
                           height="25px"
                           width="25px"
-                          onClick={handleView}
+                          onClick={() =>
+                            handleView({
+                              Id,
+                              FirstName,
+                              LastName,
+                              Age,
+                              Email,
+                              Photo1,
+                            })
+                          }
+                        />
+                      </td>
+                      <td>
+                        <img
+                          src={Edit}
+                          height="25px"
+                          width="25px"
+                          onClick={() =>
+                            handleEdit({
+                              Id,
+                              FirstName,
+                              LastName,
+                              Age,
+                              Email,
+                              Photo1,
+                            })
+                          }
                         />
                       </td>
                       <td>
@@ -194,7 +269,7 @@ const Dashboard = () => {
                           src={Delete}
                           height="25px"
                           width="25px"
-                          onClick={handleDelete}
+                          onClick={() => handleDelete(Id)}
                         />
                       </td>
                     </tr>
@@ -250,15 +325,9 @@ const Dashboard = () => {
         <div className="cont">
           <h1>Add User</h1>
           <Formik
+            enableReinitialize
             innerRef={formikRef}
-            initialValues={{
-              Id: new Date().getUTCMilliseconds(),
-              FirstName: "",
-              LastName: "",
-              Age: "",
-              Email: "",
-              file: "",
-            }}
+            initialValues={startingValues}
             validationSchema={Yup.object().shape({
               Email: Yup.string()
                 .email("Please Enter Valid Email")
@@ -279,29 +348,55 @@ const Dashboard = () => {
               Photo1: Yup.mixed().required(),
             })}
             onSubmit={(values, { setSubmitting, resetForm }) => {
-              values.Id = new Date().getUTCMilliseconds();
-              const { Id, FirstName, LastName, Age, Email, Photo1 } = values;
+              if (currentMode === true) {
+                values.Id = new Date().getUTCMilliseconds();
+                console.log(values.Photo1);
 
-              var formData = new FormData();
-              formData.append("Id", Id);
-              formData.append("FirstName", FirstName);
-              formData.append("LastName", LastName);
-              formData.append("Age", Age);
-              formData.append("Email", Email);
-              formData.append("Photo1", Photo1);
-              const formEntry = formData.entries();
-              const lol = Object.assign(
-                ...Array.from(formEntry, ([name, values]) => ({
-                  [name]: values,
-                }))
-              );
+                const { Id, FirstName, LastName, Age, Email, Photo1 } = values;
+                // const { FirstName, } = values;
+                var formData = new FormData();
+                formData.append("Id", Id);
+                formData.append("FirstName", FirstName);
+                formData.append("LastName", LastName);
+                formData.append("Age", Age);
+                formData.append("Email", Email);
+                formData.append("Photo1", Photo1);
+                const formEntry = formData.entries();
+                const lol = Object.assign(
+                  ...Array.from(formEntry, ([name, values]) => ({
+                    [name]: values,
+                  }))
+                );
 
-              showTable(true);
-              dispatch(userFormAction(lol));
+                showTable(true);
+                dispatch(userFormAction(lol));
+              } else {
+                values.Id = startingValues.Id;
+                console.log(values);
+                const { Id, FirstName, LastName, Age, Email, Photo1 } = values;
+                // const { FirstName, } = values;
+                var formData = new FormData();
+                formData.append("Id", Id);
+                formData.append("FirstName", FirstName);
+                formData.append("LastName", LastName);
+                formData.append("Age", Age);
+                formData.append("Email", Email);
+                formData.append("Photo1", Photo1);
+                const formEntry = formData.entries();
+                const lol = Object.assign(
+                  ...Array.from(formEntry, ([name, values]) => ({
+                    [name]: values,
+                  }))
+                );
+
+                showTable(true);
+                dispatch(userEditFormAction(lol));
+              }
               setSubmitting(false);
               resetForm({});
               closeModal();
               setImag("");
+              setStartingValues("");
             }}
           >
             {(formProps) => (
@@ -311,6 +406,10 @@ const Dashboard = () => {
                     name="FirstName"
                     placeholder="First Name"
                     type="text"
+                    value={startingValues.FirstName}
+                    onChange={(e) => {
+                      setStartingValues({ FirstName: e.target.value });
+                    }}
                   />
                   <ErrorMessage name="FirstName" />
                   <Field name="LastName" placeholder="Last Name" type="text" />
@@ -325,7 +424,11 @@ const Dashboard = () => {
                     name="file"
                     type="file"
                     onChange={(e) => {
-                      setImag(e.target.files[0].name);
+                      setImag(
+                        (window.URL || window.webkitURL).createObjectURL(
+                          e.target.files[0]
+                        )
+                      );
                       formProps.setFieldValue(
                         "Photo1",
                         (window.URL || window.webkitURL).createObjectURL(
@@ -334,10 +437,22 @@ const Dashboard = () => {
                       );
                     }}
                   />
-                  <p>{imag ? imag : "No File Choosen"}</p>
                   <ErrorMessage name="Photo1" />
-                </div>
 
+                  <p>
+                    {imag ? (
+                      <img src={imag} height="50px" width="50px" />
+                    ) : startingValues.Photo1 ? (
+                      <img
+                        src={startingValues.Photo1}
+                        height="50px"
+                        width="50px"
+                      />
+                    ) : (
+                      "No File Choosen"
+                    )}
+                  </p>
+                </div>
                 <div>
                   <input type="submit" value="Submit" />
                 </div>

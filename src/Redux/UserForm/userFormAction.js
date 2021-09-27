@@ -1,4 +1,4 @@
-import { Data, Delete, Searching, Sorting, SortingCharacter } from "./type";
+import { Data, Delete, Edit, Searching, Sorting, SortingCharacter } from "./type";
 // UserForm Action
 export const userFormAction = (form) => {
   return (dispatch) => {
@@ -31,5 +31,12 @@ export const searchAction = (find) => {
 export const deleteAction = (id) => {
   return (dispatch) => {
     dispatch({ type: Delete, payload: id });
+  };
+};
+
+//Edit Action
+export const userEditFormAction = (item) => {
+  return (dispatch) => {
+    dispatch({ type: Edit, payload: item });
   };
 };

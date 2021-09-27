@@ -1,4 +1,11 @@
-import { Data, Delete, Searching, Sorting, SortingCharacter } from "./type";
+import {
+  Data,
+  Delete,
+  Edit,
+  Searching,
+  Sorting,
+  SortingCharacter,
+} from "./type";
 const initialState = {
   data: [],
   search: [],
@@ -67,6 +74,13 @@ export const userFormReducer = (
       return {
         ...state,
         data: state.data.filter(({ Id }) => Id !== payload),
+        search: state.data.filter(({ Id }) => Id !== payload),
+      };
+    case Edit:
+      return {
+        data: state.data.map((item) => {
+          return item.Id === payload.Id ? payload : null;
+        }),
       };
     default:
       return state;
