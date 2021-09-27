@@ -27,6 +27,8 @@ const Dashboard = () => {
   const [config, setConfig] = useState(true);
   const formikRef = useRef();
   const [imag, setImag] = useState();
+  const [editModalIsOpen, setEditIsOpen] = useState(false);
+  const [edt, setEdt] = useState("");
   const [startingValues, setStartingValues] = useState({
     Id: "",
     FirstName: "",
@@ -40,6 +42,7 @@ const Dashboard = () => {
   const info = useSelector((state) => {
     return state?.detail?.data;
   });
+  console.log(info);
   // Searched Information
   const searched = useSelector((state) => {
     return state?.detail?.search;
@@ -47,8 +50,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setCheck(searched);
-  }, [searched, display, imag, check]);
-  console.log(info);
+  }, [searched, display, imag]);
   // Search the Value
   const search = () => {
     showTable(false);
@@ -69,9 +71,16 @@ const Dashboard = () => {
   const openModal = () => {
     setIsOpen(true);
   };
+  const openEditModal = () => {
+    setEditIsOpen(true);
+  };
+  const closeEditModal = () => {
+    setEditIsOpen(false);
+    setEdt("");
+  };
   const closeModal = () => {
     setIsOpen(false);
-    setStartingValues("");
+    setStartingValues({});
   };
   const handleView = (item) => {
     showDisplay(item);
@@ -370,11 +379,13 @@ const Dashboard = () => {
 
                 showTable(true);
                 dispatch(userFormAction(lol));
-              } else {
-                values.Id = startingValues.Id;
+              }
+              if (currentMode === false) {
+                values.Id = startingValues?.Id;
                 console.log(values);
                 const { Id, FirstName, LastName, Age, Email, Photo1 } = values;
                 // const { FirstName, } = values;
+                console.log(Id);
                 var formData = new FormData();
                 formData.append("Id", Id);
                 formData.append("FirstName", FirstName);
@@ -388,7 +399,7 @@ const Dashboard = () => {
                     [name]: values,
                   }))
                 );
-
+                console.log(lol);
                 showTable(true);
                 dispatch(userEditFormAction(lol));
               }
@@ -396,7 +407,7 @@ const Dashboard = () => {
               resetForm({});
               closeModal();
               setImag("");
-              setStartingValues("");
+              setStartingValues({});
             }}
           >
             {(formProps) => (
@@ -406,10 +417,10 @@ const Dashboard = () => {
                     name="FirstName"
                     placeholder="First Name"
                     type="text"
-                    value={startingValues.FirstName}
-                    onChange={(e) => {
-                      setStartingValues({ FirstName: e.target.value });
-                    }}
+                    // value={startingValues.FirstName}
+                    // onChange={(e) => {
+                    //   setStartingValues({ FirstName: e.target.value });
+                    // }}
                   />
                   <ErrorMessage name="FirstName" />
                   <Field name="LastName" placeholder="Last Name" type="text" />
@@ -423,7 +434,15 @@ const Dashboard = () => {
                   <Field
                     name="file"
                     type="file"
+                    // onChange={(e) => {
+                    //   setStartingValues({
+                    //     Photo1: (
+                    //       window.URL || window.webkitURL
+                    //     ).createObjectURL(e.target.files[0]),
+                    //   });
+                    // }}
                     onChange={(e) => {
+                      // setImag(e.target.files[0].name);
                       setImag(
                         (window.URL || window.webkitURL).createObjectURL(
                           e.target.files[0]

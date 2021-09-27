@@ -78,8 +78,10 @@ export const userFormReducer = (
       };
     case Edit:
       return {
+        //Ext 1
         data: state.data.map((item) => {
-          return item.Id === payload.Id ? payload : null;
+          console.log(item);
+          return item.Id === payload.Id ? payload : item;
         }),
       };
     default:

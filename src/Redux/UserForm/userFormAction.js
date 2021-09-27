@@ -1,4 +1,11 @@
-import { Data, Delete, Edit, Searching, Sorting, SortingCharacter } from "./type";
+import {
+  Data,
+  Delete,
+  Edit,
+  Searching,
+  Sorting,
+  SortingCharacter,
+} from "./type";
 // UserForm Action
 export const userFormAction = (form) => {
   return (dispatch) => {
@@ -36,6 +43,7 @@ export const deleteAction = (id) => {
 
 //Edit Action
 export const userEditFormAction = (item) => {
+  console.log(item);
   return (dispatch) => {
     dispatch({ type: Edit, payload: item });
   };
