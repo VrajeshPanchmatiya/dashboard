@@ -80,7 +80,6 @@ export const userFormReducer = (
       return {
         //Ext 1
         data: state.data.map((item) => {
-          console.log(item);
           return item.Id === payload.Id ? payload : item;
         }),
       };

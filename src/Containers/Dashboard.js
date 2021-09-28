@@ -27,8 +27,6 @@ const Dashboard = () => {
   const [config, setConfig] = useState(true);
   const formikRef = useRef();
   const [imag, setImag] = useState();
-  const [editModalIsOpen, setEditIsOpen] = useState(false);
-  const [edt, setEdt] = useState("");
   const [startingValues, setStartingValues] = useState({
     Id: "",
     FirstName: "",
@@ -417,10 +415,6 @@ const Dashboard = () => {
                     name="FirstName"
                     placeholder="First Name"
                     type="text"
-                    // value={startingValues.FirstName}
-                    // onChange={(e) => {
-                    //   setStartingValues({ FirstName: e.target.value });
-                    // }}
                   />
                   <ErrorMessage name="FirstName" />
                   <Field name="LastName" placeholder="Last Name" type="text" />
@@ -434,15 +428,7 @@ const Dashboard = () => {
                   <Field
                     name="file"
                     type="file"
-                    // onChange={(e) => {
-                    //   setStartingValues({
-                    //     Photo1: (
-                    //       window.URL || window.webkitURL
-                    //     ).createObjectURL(e.target.files[0]),
-                    //   });
-                    // }}
                     onChange={(e) => {
-                      // setImag(e.target.files[0].name);
                       setImag(
                         (window.URL || window.webkitURL).createObjectURL(
                           e.target.files[0]
